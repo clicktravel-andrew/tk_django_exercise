@@ -106,7 +106,7 @@ class RecipeApiTests(TestCase):
         recipe2 = sample_recipe(name=recipe_name)
 
         query_params = {'name': recipe_name[0:5]}
-        print(query_params)
+        
         response = self.client.get(RECIPES_URL, query_params)
 
         serializer1 = RecipeSerializer(recipe1)
