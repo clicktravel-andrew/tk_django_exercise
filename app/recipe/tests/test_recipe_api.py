@@ -4,22 +4,33 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from core.models import Recipe
+from core.models import Recipe, Ingredient
 
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
 
 RECIPES_URL = reverse('recipe:recipe-list')
+
+
+def detail_url(recipe_id):
+    """Return recipe detail url"""
+    return reverse('recipe:recipe-detail', args=[recipe_id])
+
+
+def sample_ingredient(recipe, name='love'):
+    """Create and return a sample ingredient"""
+    return Ingredient.objects.create(recipe=recipe, name=name)
 
 
 def sample_recipe(**params):
     """Create and return a sample recipe"""
     defaults = {
-        'name': 'test name',
-        'description': 'A long form, test description',
+        'name': 'Unicorn cakes',
+        'description': 'Sparkly, swirly and bright',
     }
     defaults.update(params)
-
-    return Recipe.objects.create(**defaults)
+    recipe = Recipe.objects.create(**defaults)
+    sample_ingredient(recipe=recipe)
+    return recipe
 
 
 class RecipeApiTests(TestCase):
@@ -41,19 +52,43 @@ class RecipeApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
+    def test_view_recipe_detail(self):
+        """Test viewing a recipe detail"""
+        recipe = sample_recipe()
+
+        url = detail_url(recipe.id)
+
+        response = self.client.get(url)
+
+        serializer = RecipeDetailSerializer(recipe)
+
+        self.assertEqual(response.data, serializer.data)
+
     def test_create_recipe_successful(self):
         """Test creating a new recipe"""
+        ingredient1 = {'name': 'flour'}
+        ingredient2 = {'name': 'yeast'}
+        ingredient3 = {'name': 'water'}
         payload = {
-            'name': 'Pizza',
-            'description': 'Put it in the oven',
+            'name': 'Bread',
+            'description': 'Ideal for toast',
+            'ingredients': [
+                ingredient1,
+                ingredient2,
+                ingredient3,
+            ],
         }
-        self.client.post(RECIPES_URL, payload)
 
-        exists = Recipe.objects.filter(
-            name=payload['name']
-        ).exists()
+        response = self.client.post(RECIPES_URL, payload)
 
-        self.assertTrue(exists)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        recipe = Recipe.objects.get(id=response.data['id'])
+        ingredients = recipe.ingredients.all()
+        self.assertEqual(ingredients.count(), 3)
+        self.assertEqual(len(ingredients.filter(name=ingredient1['name'])), 1)
+        self.assertEqual(len(ingredients.filter(name=ingredient2['name'])), 1)
+        self.assertEqual(len(ingredients.filter(name=ingredient3['name'])), 1)
 
     def test_create_recipe_invalid(self):
         """Test that a recipe payload must be valid"""

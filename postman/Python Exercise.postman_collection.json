@@ -47,13 +47,34 @@
 					"response": []
 				},
 				{
+					"name": "Recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/3/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes",
+								"3",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Recipe",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Chocolate coconut bars\",\n    \"description\": \"Some kind of coconut bar thing\"\n}",
+							"raw": "{\n    \"name\": \"Chocolate coconut bars\",\n    \"description\": \"Some kind of coconut bar things\",\n    \"ingredients\": [{\"name\": \"dough\"}, {\"name\": \"cheese\"}, {\"name\": \"tomato\"}]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
