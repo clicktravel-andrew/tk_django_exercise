@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "4c6c8ca6-bb9a-4ac2-8a82-6c1c5ea93b4b",
+		"name": "Python Exercise",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "Recipe endpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{DJANGO_COURSE_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recipes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{DJANGO_COURSE_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "DJANGO_SERVER",
+			"value": "http://127.0.0.1:8000"
+		}
+	]
+}
