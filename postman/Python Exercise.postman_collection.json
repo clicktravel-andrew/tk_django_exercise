@@ -53,7 +53,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Chocolate coconut bars\",\n    \"description\": \"Some kind of coconut bar things\",\n    \"ingredients\": [{\"name\": \"dough\"}, {\"name\": \"cheese\"}, {\"name\": \"tomato\"}]\n}",
+							"raw": "{\n    \"name\": \"Neapolitan Pizza\",\n    \"description\": \"Lovely, lovely pizza\",\n    \"ingredients\": [{\"name\": \"dough\"}, {\"name\": \"cheese\"}, {\"name\": \"tomato\"}, {\"name\": \"basil\"}]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +81,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/3/",
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/1/",
 							"host": [
 								"{{DJANGO_SERVER}}"
 							],
@@ -89,7 +89,37 @@
 								"api",
 								"recipe",
 								"recipes",
-								"3",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Recipe",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Hawaiian Calzone\",\n    \"description\": \"A folded abomination\",\n    \"ingredients\": [{\"name\": \"dough\"}, {\"name\": \"cheese\"}, {\"name\": \"tomato\"}, {\"name\": \"ham\"}, {\"name\": \"pinapple\"}]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/1/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes",
+								"1",
 								""
 							]
 						}

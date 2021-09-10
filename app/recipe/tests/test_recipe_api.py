@@ -64,6 +64,14 @@ class RecipeApiTests(TestCase):
 
         self.assertEqual(response.data, serializer.data)
 
+    def test_view_unknown_recipe_detail(self):
+        """Test viewing a recipe detail"""
+        url = detail_url('1')
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_create_recipe_successful(self):
         """Test creating a new recipe"""
         ingredient1 = {'name': 'flour'}
@@ -132,3 +140,33 @@ class RecipeApiTests(TestCase):
         # Check no ingredient left in the DB
         db_ingredients = Ingredient.objects.all()
         self.assertEqual(db_ingredients.count(), 0)
+
+    def test_delete_unknown_recipe(self):
+        """Tests call to delete a recipe that doesn't exist"""
+        url = detail_url('1')
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_update_existing_recipe(self):
+        """Tests a PATCH of an existing recipe"""
+        recipe = sample_recipe()
+
+        ingredient = {'name': 'flour'}
+        update_payload = {
+            'name': 'Bread',
+            'description': 'Ideal for toast',
+            'ingredients': [
+                ingredient,
+            ],
+        }
+        url = detail_url(recipe.id)
+        self.client.patch(url, update_payload)
+
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.name, update_payload['name'])
+        ingredients = recipe.ingredients.all()
+        self.assertEqual(len(ingredients), 1)
+
+        self.assertEqual(len(ingredients.filter(name=ingredient['name'])), 1)

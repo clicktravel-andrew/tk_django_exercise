@@ -22,7 +22,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """create the recipe and ingredients"""
-        ingredient_map = validated_data.pop('ingredients')
+        ingredient_map = validated_data.pop('ingredients', [])
 
         recipe = Recipe.objects.create(**validated_data)
 
@@ -30,6 +30,17 @@ class RecipeSerializer(serializers.ModelSerializer):
             Ingredient.objects.create(**ingredient, recipe=recipe)
 
         return recipe
+
+    def update(self, instance, validated_data):
+        """Update a given recipe given the data provided"""
+        ingredient_map = validated_data.pop('ingredients', [])
+        updated_recipe = super().update(instance, validated_data)
+        updated_recipe.ingredients.all().delete()
+
+        for ingredient in ingredient_map:
+            Ingredient.objects.create(**ingredient, recipe=updated_recipe)
+
+        return updated_recipe
 
 
 class RecipeDetailSerializer(RecipeSerializer):
