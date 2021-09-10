@@ -47,27 +47,6 @@
 					"response": []
 				},
 				{
-					"name": "Recipe",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/3/",
-							"host": [
-								"{{DJANGO_SERVER}}"
-							],
-							"path": [
-								"api",
-								"recipe",
-								"recipes",
-								"3",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Create Recipe",
 					"request": {
 						"method": "POST",
@@ -90,6 +69,48 @@
 								"api",
 								"recipe",
 								"recipes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Recipe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/3/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes",
+								"3",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Recipe",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/1/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes",
+								"1",
 								""
 							]
 						}
