@@ -11,7 +11,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Returns recipes ordered by ID"""
-        return self.queryset.order_by('-id')
+        queryset = self.queryset
+        name_filter = self.request.query_params.get('name', None)
+        if name_filter:
+            queryset = queryset.filter(name__contains=name_filter)
+
+        return queryset.order_by('-id')
 
     def get_serializer_class(self):
         """Return appropriate serializer class"""

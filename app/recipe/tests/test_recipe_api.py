@@ -98,3 +98,19 @@ class RecipeApiTests(TestCase):
         response = self.client.post(RECIPES_URL, payload)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_filter_recipes_by_name(self):
+        """Test retrieving a list of recipes"""
+        recipe_name = 'Kitten cakes'
+        recipe1 = sample_recipe()
+        recipe2 = sample_recipe(name=recipe_name)
+
+        query_params = {'name': recipe_name[0:5]}
+        print(query_params)
+        response = self.client.get(RECIPES_URL, query_params)
+
+        serializer1 = RecipeSerializer(recipe1)
+        serializer2 = RecipeSerializer(recipe2)
+
+        self.assertNotIn(serializer1.data, response.data)
+        self.assertIn(serializer2.data, response.data)
