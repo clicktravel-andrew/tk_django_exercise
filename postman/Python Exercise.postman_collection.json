@@ -12,13 +12,7 @@
 					"name": "Recipe endpoints",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Token {{DJANGO_COURSE_TOKEN}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{DJANGO_SERVER}}/api/recipe/",
 							"host": [
@@ -37,13 +31,7 @@
 					"name": "Recipes",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Token {{DJANGO_COURSE_TOKEN}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes",
 							"host": [
@@ -53,6 +41,35 @@
 								"api",
 								"recipe",
 								"recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Recipe",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chocolate coconut bars\",\n    \"description\": \"Some kind of coconut bar thing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DJANGO_SERVER}}/api/recipe/recipes/",
+							"host": [
+								"{{DJANGO_SERVER}}"
+							],
+							"path": [
+								"api",
+								"recipe",
+								"recipes",
+								""
 							]
 						}
 					},
