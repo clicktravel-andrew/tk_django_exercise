@@ -114,3 +114,30 @@ class RecipeApiTests(TestCase):
 
         self.assertNotIn(serializer1.data, response.data)
         self.assertIn(serializer2.data, response.data)
+
+    def test_delete_recipe(self):
+        """Tests deleting a recipe by id"""
+
+        recipe_name = 'Kitten cakes'
+        recipe_to_keep = sample_recipe(name=recipe_name)
+        recipe_to_delete = sample_recipe()
+
+        url = detail_url(recipe_to_delete.id)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Check only one recipe left in the DB
+        db_recipes = Recipe.objects.all()
+        self.assertEqual(db_recipes.count(), 1)
+        self.assertEqual(len(db_recipes.filter(name=recipe_name)), 1)
+
+        # Check only one ingredient left in the DB
+        db_ingredients = Ingredient.objects.all()
+        self.assertEqual(db_ingredients.count(), 1)
+
+        # Check that the ingredient that is left belongs to remaining recipe
+        recipe_ingredients = recipe_to_keep.ingredients.all()
+        self.assertEqual(recipe_ingredients.count(), 1)
+        self.assertEqual(recipe_ingredients[0], db_ingredients[0])
