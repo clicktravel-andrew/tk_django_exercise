@@ -40,3 +40,26 @@ class RecipeApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
+
+    def test_create_recipe_successful(self):
+        """Test creating a new recipe"""
+        payload = {
+            'name': 'Pizza',
+            'description': 'Put it in the oven',
+        }
+        self.client.post(RECIPES_URL, payload)
+
+        exists = Recipe.objects.filter(
+            name=payload['name']
+        ).exists()
+
+        self.assertTrue(exists)
+
+    def test_create_recipe_invalid(self):
+        """Test that a recipe payload must be valid"""
+        payload = {
+            'name': '',
+        }
+        response = self.client.post(RECIPES_URL, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
