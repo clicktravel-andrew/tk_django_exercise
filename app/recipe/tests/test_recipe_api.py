@@ -6,8 +6,6 @@ from rest_framework import status
 
 from core.models import Recipe, Ingredient
 
-from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
-
 RECIPES_URL = reverse('recipe:recipe-list')
 
 
@@ -46,11 +44,8 @@ class RecipeApiTests(TestCase):
 
         response = self.client.get(RECIPES_URL)
 
-        recipes = Recipe.objects.all().order_by('-id')
-        serializer = RecipeSerializer(recipes, many=True)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(len(response.data), 2)
 
     def test_view_recipe_detail(self):
         """Test viewing a recipe detail"""
@@ -60,9 +55,12 @@ class RecipeApiTests(TestCase):
 
         response = self.client.get(url)
 
-        serializer = RecipeDetailSerializer(recipe)
+        self.assertEqual(response.data['id'], recipe.id)
+        self.assertEqual(response.data['name'], recipe.name)
+        self.assertEqual(response.data['description'], recipe.description)
 
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(len(response.data['ingredients']), 1)
+        self.assertEqual(response.data['ingredients'][0]['name'], 'love')
 
     def test_view_unknown_recipe_detail(self):
         """Test viewing a recipe detail"""
@@ -94,9 +92,12 @@ class RecipeApiTests(TestCase):
         recipe = Recipe.objects.get(id=response.data['id'])
         ingredients = recipe.ingredients.all()
         self.assertEqual(ingredients.count(), 3)
-        self.assertEqual(len(ingredients.filter(name=ingredient1['name'])), 1)
-        self.assertEqual(len(ingredients.filter(name=ingredient2['name'])), 1)
-        self.assertEqual(len(ingredients.filter(name=ingredient3['name'])), 1)
+        self.assertEqual(
+            ingredients.filter(name=ingredient1['name']).count(), 1)
+        self.assertEqual(
+            ingredients.filter(name=ingredient2['name']).count(), 1)
+        self.assertEqual(
+            ingredients.filter(name=ingredient3['name']).count(), 1)
 
     def test_create_recipe_invalid(self):
         """Test that a recipe payload must be valid"""
@@ -110,18 +111,18 @@ class RecipeApiTests(TestCase):
     def test_filter_recipes_by_name(self):
         """Test retrieving a list of recipes"""
         recipe_name = 'Kitten cakes'
-        recipe1 = sample_recipe()
-        recipe2 = sample_recipe(name=recipe_name)
+        recipe = sample_recipe(name=recipe_name)
 
         query_params = {'name': recipe_name[0:5]}
 
         response = self.client.get(RECIPES_URL, query_params)
 
-        serializer1 = RecipeSerializer(recipe1)
-        serializer2 = RecipeSerializer(recipe2)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], recipe.id)
+        self.assertEqual(response.data[0]['name'], recipe_name)
+        self.assertEqual(response.data[0]['description'], recipe.description)
 
-        self.assertNotIn(serializer1.data, response.data)
-        self.assertIn(serializer2.data, response.data)
+        self.assertEqual(len(response.data[0]['ingredients']), 1)
 
     def test_delete_recipe(self):
         """Tests deleting a recipe by id"""
@@ -169,4 +170,5 @@ class RecipeApiTests(TestCase):
         ingredients = recipe.ingredients.all()
         self.assertEqual(len(ingredients), 1)
 
-        self.assertEqual(len(ingredients.filter(name=ingredient['name'])), 1)
+        self.assertEqual(
+            ingredients.filter(name=ingredient['name']).count(), 1)
